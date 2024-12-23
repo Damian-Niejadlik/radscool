@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Wypożyczenia</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Użytkownik</th>
+            <th>Samochód</th>
+            <th>Data wypożyczenia</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rental in rentals %}
+        <tr>
+            <td>{{ rental.user.username }}</td>
+            <td>{{ rental.car.brand }} {{ rental.car.model }}</td>
+            <td>{{ rental.rented_at }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Welcome to Car Rental</h1>
+        {% if user.is_authenticated %}
+            <p>Witaj, {{ user.username }}!</p>
+            <p>Stan portfela: {{ user.balance }} zł</p>
+        {% endif %}
+        <nav>
+            <a href="{% url 'car_list' %}">Cars</a>
+            <a href="{% url 'add_balance' %}">Add Balance</a>
+            {% if user.is_authenticated %}
+                {% if user.is_admin %}
+                    <a href="{% url 'add_car' %}">Dodaj ogłoszenie</a>
+                    <a href="{% url 'view_rentals' %}">Zobacz wypożyczenia</a>
+                {% endif %}
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer;">
+                        Logout
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

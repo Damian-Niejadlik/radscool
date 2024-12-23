@@ -1,0 +1,162 @@
+/* Ogólne style */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #0073e6;
+    color: white;
+    padding: 20px 10px;
+    text-align: center;
+}
+
+header nav a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header nav a:hover {
+    text-decoration: underline;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #0073e6;
+}
+
+h3 {
+    color: #005bb5;
+}
+
+p {
+    line-height: 1.5;
+}
+
+/* Lista samochodów */
+.car-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px;
+}
+
+.car-item {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 300px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.car-item:hover {
+    transform: scale(1.05);
+}
+
+.car-item h3 {
+    margin-bottom: 10px;
+}
+
+.car-item ul {
+    list-style: none;
+    padding: 0;
+}
+
+.car-item ul li {
+    margin: 5px 0;
+}
+
+.car-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.rent-button {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #0073e6;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.rent-button:hover {
+    background-color: #005bb5;
+}
+
+/* Formularze */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    gap: 10px;
+}
+
+form input, form select, form button {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+form button {
+    background-color: #0073e6;
+    color: white;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #005bb5;
+}
+
+/* Tabele */
+table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #0073e6;
+    color: white;
+}
+
+table tr:hover {
+    background-color: #f2f2f2;
+}
+
+/* Dostosowanie do urządzeń mobilnych */
+@media (max-width: 768px) {
+    .car-list {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .car-item {
+        width: 90%;
+    }
+}

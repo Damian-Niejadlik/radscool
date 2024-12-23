@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Lista samochodów do wypożyczenia</h2>
+<div class="car-list">
+    {% for car in cars %}
+    <div class="car-item">
+        <h3>{{ car.brand }} {{ car.model }}</h3>
+        {% if car.image %}
+            <img src="{{ car.image.url }}" alt="Zdjęcie samochodu" class="car-image">
+        {% else %}
+            <p>Brak zdjęcia</p>
+        {% endif %}
+        <ul>
+            <li>Rocznik: {{ car.year }}</li>
+            <li>Rodzaj paliwa: {{ car.fuel_type }}</li>
+            <li>Cena: {{ car.price }} zł</li>
+        </ul>
+        <a href="{% url 'rent_car' car.id %}" class="rent-button">Wypożycz</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
