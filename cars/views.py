@@ -5,6 +5,7 @@ from django.contrib import messages
 from decimal import Decimal
 from .forms import CustomUserCreationForm, CarForm
 from .models import User, Car, Rental
+from django.utils.timezone import now
 
 @login_required
 def car_list(request):
@@ -46,7 +47,10 @@ def add_car(request):
     if request.method == 'POST':
         form = CarForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            car = form.save(commit=False)
+            car.save()
+            due_date = form.cleaned_data['due_date']
+            Rental.objects.create(car=car, due_date=due_date, user=request.user)  # Opcjonalnie
             messages.success(request, 'Ogłoszenie zostało dodane.')
             return redirect('car_list')
     else:
@@ -57,6 +61,40 @@ def add_car(request):
 def view_rentals(request):
     rentals = Rental.objects.select_related('car', 'user')
     return render(request, 'cars/view_rentals.html', {'rentals': rentals})
+
+@staff_member_required
+def delete_car(request, car_id):
+    car = get_object_or_404(Car, id=car_id)
+    car.delete()
+    messages.success(request, f"Car {car.brand} {car.model} has been deleted.")
+    return redirect('car_list')
+
+@staff_member_required
+def edit_car(request, car_id):
+    car = get_object_or_404(Car, id=car_id)
+    if request.method == 'POST':
+        form = CarForm(request.POST, request.FILES, instance=car)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"{car.brand} {car.model} has been updated.")
+            return redirect('car_list')
+    else:
+        form = CarForm(instance=car)
+    return render(request, 'cars/edit_car.html', {'form': form})
+
+def return_expired_rentals():
+    expired_rentals = Rental.objects.filter(due_date__lt=now())
+    for rental in expired_rentals:
+        rental.car.is_available = True
+        rental.car.save()
+        rental.delete()
+
+@login_required
+def my_rentals(request):
+    return_expired_rentals()
+    rentals = Rental.objects.filter(user=request.user)
+    current_time = now()
+    return render(request, 'cars/my_rentals.html', {'rentals': rentals, 'current_time': current_time})
 
 def register(request):
     if request.method == 'POST':

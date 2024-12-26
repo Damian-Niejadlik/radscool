@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Moje wypożyczenia</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Samochód</th>
+                <th>Data wypożyczenia</th>
+                <th>Termin zwrotu</th>
+                <th>Pozostały czas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rental in rentals %}
+            <tr>
+                <td>{{ rental.car.brand }} {{ rental.car.model }}</td>
+                <td>{{ rental.rented_at|date:"d-m-Y H:i" }}</td> <!-- Data z godziną i minutą -->
+                <td>{{ rental.due_date|date:"d-m-Y H:i" }}</td> <!-- Format dd-mm-rrrr gg:mm -->
+                <td class="time-left" data-due-date="{{ rental.due_date|date:"Y-m-d\TH:i:s" }}">
+                    {% if rental.due_date > current_time %}
+                    Obliczanie...
+                    {% else %}
+                    Przeterminowane
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function updateRemainingTimes() {
+        const timeCells = document.querySelectorAll('.time-left');
+
+        timeCells.forEach(cell => {
+            const dueDate = cell.getAttribute('data-due-date');
+            const dueDateTime = new Date(dueDate).getTime();
+            const now = new Date().getTime();
+
+            if (dueDateTime > now) {
+                const diffMs = dueDateTime - now;
+
+                const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+                cell.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            } else {
+                cell.textContent = 'Przeterminowane';
+            }
+        });
+    }
+
+    // Aktualizuj czas co sekundę
+    setInterval(updateRemainingTimes, 1000);
+
+    // Uruchom aktualizację od razu po załadowaniu strony
+    updateRemainingTimes();
+</script>
+{% endblock %}
