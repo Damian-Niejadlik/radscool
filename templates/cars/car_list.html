@@ -1,23 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Lista samochodów do wypożyczenia</h2>
-<div class="car-list">
-    {% for car in cars %}
-    <div class="car-item">
-        <h3>{{ car.brand }} {{ car.model }}</h3>
-        {% if car.image %}
-            <img src="{{ car.image.url }}" alt="Zdjęcie samochodu" class="car-image">
-        {% else %}
-            <p>Brak zdjęcia</p>
-        {% endif %}
-        <ul>
-            <li>Rocznik: {{ car.year }}</li>
-            <li>Rodzaj paliwa: {{ car.fuel_type }}</li>
-            <li>Cena: {{ car.price }} zł</li>
-        </ul>
-        <a href="{% url 'rent_car' car.id %}" class="rent-button">Wypożycz</a>
+<div class="container mt-5">
+    <h1>Lista samochodów</h1>
+    <div class="car-list">
+        {% for car in cars %}
+        <div class="car-item">
+            <img src="{{ car.image.url }}" alt="{{ car.brand }} {{ car.model }}" class="car-image">
+            <h3>{{ car.brand }} {{ car.model }}</h3>
+            <p>Rok produkcji: {{ car.year }}</p>
+            <p>Cena: {{ car.price }} zł / 24h</p>
+            <p>Rodzaj paliwa: {{ car.get_fuel_type_display }}</p>
+            <div class="button-group">
+                <a href="{% url 'rent_car' car.id %}" class="rent-button">Wypożycz</a>
+                {% if user.is_staff %}
+                <a href="{% url 'edit_car' car.id %}" class="admin-button">Edytuj</a>
+                <a href="{% url 'delete_car' car.id %}" class="admin-button">Usuń</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 {% endblock %}
